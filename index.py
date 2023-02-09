@@ -53,7 +53,7 @@ def login():
 
         # if the user is found and the password is correct, redirect him to the dashboard
         if user and bcrypt.checkpw(password.encode(), user["password"].encode()):
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard", username=username))
 
         return "Incorrect username or password"
 
@@ -66,6 +66,7 @@ def signup():
         # get the username and the password that were inputted in the form
         username = request.form["username"]
         password = request.form["password"]
+        role = request.form["role"]
 
         # find the user based on his inputs, returns true if it finds. false if not
         user = find({"username": username})
@@ -74,17 +75,23 @@ def signup():
 
         # encrypt the password using the salt
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-        insert({"username": username, "password": hashed_password.decode()})
+        insert({"username": username, "password": hashed_password.decode(), "role": role})
 
         return redirect(url_for("login"))
 
     return render_template("signup.html")
 
 
-@app.route("/dashboard")
-def dashboard():
-    # here will be the rest of the code
-    return "Welcome to the dashboard!"
+@app.route("/dashboard/<username>")
+def dashboard(username):
+    data = collection.find_one({"username": username}, {"role": 1, "_id": 0})
+    role = list(data.values())[0]
+    if role == "parent":
+        return "hello parent"
+    elif role == "child":
+        return "hello child"
+    else:
+        return "hi admin"
 
 
 if __name__ == "__main__":
