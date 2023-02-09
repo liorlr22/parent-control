@@ -46,6 +46,19 @@
         border-bottom: 2px solid #333;
     }
 
+    #left{
+        margin-right: 20px;
+    }
+
+    #right{
+        margin-left: 20px;
+    }
+
+    label {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
     input[type="submit"] {
         width: 100%;
         padding: 10px;

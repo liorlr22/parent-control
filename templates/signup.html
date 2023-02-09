@@ -14,7 +14,10 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/form_style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='stylesheets/form_style.css') }}"
+    />
   </head>
   <body>
     <!-- the form -->
@@ -22,10 +25,14 @@
       <form action="{{ url_for('signup') }}" method="post">
         <input type="text" name="username" placeholder="Username" />
         <input type="password" name="password" placeholder="Password" />
-        <input type="radio" name="role" value="parent">
-        <label for="parent">Parent</label>
-        <input type="radio" name="role" value="child">
-        <label for="child">Child</label>
+        <label for="parent" id="left">
+          <input type="radio" name="role" value="parent" />
+          Parent
+        </label>
+        <label for="child" id="right">
+          <input type="radio" name="role" value="child" />
+          Child
+        </label>
         <input type="submit" value="Submit" />
       </form>
     </div>
