@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>sign up</title>
+    <title>Signup</title>
     <!-- Latest compiled and minified CSS -->
     <link
       rel="stylesheet"
@@ -26,15 +26,39 @@
         <input type="text" name="username" placeholder="Username" />
         <input type="password" name="password" placeholder="Password" />
         <label for="parent" id="left">
-          <input type="radio" name="role" value="parent" />
+          <input type="radio" name="role" value="parent" required />
           Parent
         </label>
         <label for="child" id="right">
-          <input type="radio" name="role" value="child" />
+          <input type="radio" name="role" value="child" required />
           Child
         </label>
         <input type="submit" value="Submit" />
+        <div
+          class="form-group d-flex align-items-center"
+          style="margin-top: 15px"
+        >
+          <label>already registered?</label>
+          <button
+            type="button"
+            class="btn btn-secondary ml-auto"
+            id="switch-page-btn"
+          >
+            Log In
+          </button>
+          <button type="button" class="btn btn-secondary" id="home-btn">
+            Home
+          </button>
+        </div>
       </form>
     </div>
+    <script>
+      document.getElementById("switch-page-btn").addEventListener("click", function () {
+          window.location.href='{{ url_for('login') }}'
+        });
+      {% if error_message %}
+          alert("{{ error_message }}");
+      {% endif %}
+    </script>
   </body>
 </html>

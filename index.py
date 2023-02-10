@@ -1,5 +1,5 @@
 import pymongo
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, redirect, url_for, make_response, session, jsonify
 import bcrypt
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -7,6 +7,7 @@ mydb = client["users"]
 collection = mydb['parents-control']
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
 
 
 # function to delete one element from db
@@ -54,8 +55,9 @@ def login():
         # if the user is found and the password is correct, redirect him to the dashboard
         if user and bcrypt.checkpw(password.encode(), user["password"].encode()):
             return redirect(url_for("dashboard", username=username))
-
-        return "Incorrect username or password"
+        else:
+            error_message = "Incorrect username or password"
+            return render_template("login.html", error_message=error_message)
 
     return render_template("login.html")
 
@@ -71,7 +73,8 @@ def signup():
         # find the user based on his inputs, returns true if it finds. false if not
         user = find({"username": username})
         if user:
-            return "User already exists"
+            error_message = "User already exists"
+            return render_template("signup.html", error_message=error_message)
 
         # encrypt the password using the salt
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
@@ -82,8 +85,17 @@ def signup():
     return render_template("signup.html")
 
 
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+
 @app.route("/dashboard/<username>")
 def dashboard(username):
+    if username != session.get('username'):
+        return redirect(url_for('login'))
+
     data = collection.find_one({"username": username}, {"role": 1, "_id": 0})
     role = list(data.values())[0]
     if role == "parent":
@@ -92,6 +104,11 @@ def dashboard(username):
         return "hello child"
     else:
         return "hi admin"
+
+
+@app.route("/home")
+def toHome():
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

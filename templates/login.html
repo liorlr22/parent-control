@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>login</title>
+    <title>Login</title>
     <!-- Latest compiled and minified CSS -->
     <link
       rel="stylesheet"
@@ -14,16 +14,46 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/form_style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='stylesheets/form_style.css') }}"
+    />
   </head>
   <body>
     <!-- the form -->
     <div class="container">
-        <form action="{{ url_for('login') }}" method="post">
+      <!-- <div class="form-group" style="margin-top: 15px">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="home-btn"
+          style="width: 550px; height: 100px; background-color:#d8d6d6; margin-top: -200px;"
+        >
+          Home
+        </button>
+      </div> -->
+      <form action="{{ url_for('signup') }}" method="post">
         <input type="text" name="username" placeholder="Username" />
         <input type="password" name="password" placeholder="Password" />
         <input type="submit" value="Submit" />
-        </form>
+        <div class="form-group" style="margin-top: 15px">
+          <label>New in here?</label>
+          <button type="button" class="btn btn-secondary" id="switch-page-btn">
+            Sign Up
+          </button>
+          <button type="button" class="btn btn-secondary" id="home-btn">
+            Home
+          </button>
+        </div>
+      </form>
     </div>
+    <script>
+      document.getElementById("switch-page-btn").addEventListener("click", function () {
+          window.location.href='{{ url_for('signup') }}'
+        });
+      document.getElementById("home-btn").addEventListener("click", function () {
+          window.location.href='{{ url_for('toHome') }}'
+        });
+    </script>
   </body>
 </html>
