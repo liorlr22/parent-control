@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <title>Reset your password</title>
+</head>
+<body>
+    <h1>Reset your password</h1>
+    {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+    {% endif %}
+    {% if success_message %}
+        <p style="color: green">{{ success_message }}</p>
+    {% else %}
+        <form method="post">
+            <p>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required>
+            </p>
+            <p>
+                <input type="submit" value="Reset password">
+            </p>
+        </form>
+    {% endif %}
+</body>
+</html>

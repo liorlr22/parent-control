@@ -1,6 +1,8 @@
 import pymongo
 from flask import Flask, render_template, request, redirect, url_for, make_response, session, jsonify
 import bcrypt
+from flask_mail import Message
+from flask_mail import Mail
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = client["users"]
@@ -46,15 +48,15 @@ def index():
 def login():
     if request.method == "POST":
         # get the username and the password that were inputted in the form
-        username = request.form["username"]
+        session['username'] = request.form["username"]
         password = request.form["password"]
 
         # find the user based on his inputs, returns true if it finds. false if not
-        user = find({"username": username})
+        user = find({"username": session['username']})
 
         # if the user is found and the password is correct, redirect him to the dashboard
         if user and bcrypt.checkpw(password.encode(), user["password"].encode()):
-            return redirect(url_for("dashboard", username=username))
+            return redirect(url_for("dashboard", username=session['username']))
         else:
             error_message = "Incorrect username or password"
             return render_template("login.html", error_message=error_message)
@@ -66,6 +68,7 @@ def login():
 def signup():
     if request.method == "POST":
         # get the username and the password that were inputted in the form
+        email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
         role = request.form["role"]
@@ -78,7 +81,8 @@ def signup():
 
         # encrypt the password using the salt
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-        insert({"username": username, "password": hashed_password.decode(), "role": role})
+        insert(
+            {"email": email, "username": username, "password": hashed_password.decode(), "role": role})
 
         return redirect(url_for("login"))
 
@@ -98,13 +102,12 @@ def dashboard(username):
 
     data = collection.find_one({"username": username}, {"role": 1, "_id": 0})
     role = list(data.values())[0]
-    if role == "parent":
-        return "hello parent"
-    elif role == "child":
-        return "hello child"
-    else:
-        return "hi admin"
+    return f"hello {role}"
 
+
+@app.route("/reset", methods=["GET", "POST"])
+def reset_password():
+    return "hello world"
 
 @app.route("/home")
 def toHome():

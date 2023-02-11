@@ -32,9 +32,9 @@
           Home
         </button>
       </div> -->
-      <form action="{{ url_for('signup') }}" method="post">
-        <input type="text" name="username" placeholder="Username" />
-        <input type="password" name="password" placeholder="Password" />
+      <form action="{{ url_for('login') }}" method="post">
+        <input type="text" name="username" placeholder="Username" required/>
+        <input type="password" name="password" placeholder="Password" required/>
         <input type="submit" value="Submit" />
         <div class="form-group" style="margin-top: 15px">
           <label>New in here?</label>
@@ -46,8 +46,17 @@
           </button>
         </div>
       </form>
+      <div
+        class="form-group d-flex align-items-center"
+        style="margin-top: 15px"
+      >
+        <a href="{{ url_for('reset_password') }}">Forgot password?</a>
+      </div>
     </div>
     <script>
+      {% if error_message %}
+          alert("{{ error_message }}");
+      {% endif %}
       document.getElementById("switch-page-btn").addEventListener("click", function () {
           window.location.href='{{ url_for('signup') }}'
         });
